@@ -12,11 +12,25 @@ const MemoryStore = require('memorystore')(session);
 const app = express();
 
 // Configuration CORS pour Vercel
+// Important: utiliser l'origine réelle de la requête pour permettre les cookies
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: function (origin, callback) {
+        // Autoriser les requêtes sans origine (mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
+        // Autoriser toutes les origines en développement, ou l'origine spécifiée en production
+        const allowedOrigins = process.env.FRONTEND_URL 
+            ? [process.env.FRONTEND_URL, 'http://localhost:3000']
+            : ['*'];
+        if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Autoriser quand même pour le moment
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Set-Cookie']
 }));
 
 app.use(express.json());

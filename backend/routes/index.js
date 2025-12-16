@@ -6,14 +6,16 @@
 const express = require('express');
 const router = express.Router();
 
-// Routes d'authentification
+// Routes d'authentification (DOIT être avant le middleware)
 router.use('/auth', require('./auth'));
 
 // Middleware d'authentification pour toutes les routes sauf auth
 const Auth = require('../config/auth');
 router.use((req, res, next) => {
     // Exclure les routes /auth du middleware
-    if (req.path.startsWith('/auth')) {
+    // Vérifier à la fois req.path et req.originalUrl pour Vercel
+    const path = req.path || req.originalUrl || '';
+    if (path.startsWith('/auth') || path.includes('/auth/')) {
         return next();
     }
     Auth.requireLogin(req, res, next);

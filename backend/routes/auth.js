@@ -49,7 +49,7 @@ router.post('/logout', (req, res) => {
 // Vérifier la session
 router.get('/check', async (req, res) => {
     try {
-        if (Auth.isLoggedIn(req) && Auth.checkSessionTimeout) {
+        if (Auth.isLoggedIn(req)) {
             const user = await Utilisateur.getById(Auth.getUserId(req));
             if (user) {
                 return res.json({
