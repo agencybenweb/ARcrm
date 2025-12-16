@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alliance Renov - CRM</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Page de connexion -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Alliance Renov</h1>
+                <h2>CRM - Courtage en travaux</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </form>
+                <div id="login-error" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application principale -->
+    <div id="app-page" class="page">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Alliance Renov</h2>
+                <div id="user-profile" class="user-profile-clickable" onclick="viewProfile()">
+                    <div class="user-avatar">
+                        <span id="user-avatar-initials">MD</span>
+                    </div>
+                    <p id="user-name"></p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" data-page="dashboard" class="nav-item active">
+                    <span class="icon">📊</span> Dashboard
+                </a>
+                <a href="#" data-page="clients" class="nav-item">
+                    <span class="icon">👥</span> Clients
+                </a>
+                <a href="#" data-page="projets" class="nav-item">
+                    <span class="icon">🏗️</span> Projets
+                </a>
+                <a href="#" data-page="artisans" class="nav-item">
+                    <span class="icon">🔧</span> Artisans
+                </a>
+                <a href="#" data-page="devis" class="nav-item">
+                    <span class="icon">📄</span> Devis
+                </a>
+                <a href="#" data-page="relances" class="nav-item">
+                    <span class="icon">📞</span> Relances
+                </a>
+                <a href="#" data-page="commerciaux" class="nav-item">
+                    <span class="icon">👔</span> Commerciaux
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-secondary">Déconnexion</button>
+            </div>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="page-title">Dashboard</h1>
+            </header>
+
+            <!-- Dashboard -->
+            <div id="dashboard-page" class="content-page active">
+                <div class="stats-grid">
+                    <div class="stat-card clickable" data-page="clients" onclick="navigateToPage('clients')">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h3 id="stat-clients">0</h3>
+                            <p>Clients</p>
+                        </div>
+                    </div>
+                    <div class="stat-card clickable" data-page="projets" onclick="navigateToPage('projets')">
+                        <div class="stat-icon">🏗️</div>
+                        <div class="stat-info">
+                            <h3 id="stat-projets">0</h3>
+                            <p>Projets en cours</p>
+                        </div>
+                    </div>
+                    <div class="stat-card clickable" data-page="devis" onclick="navigateToPage('devis')">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-info">
+                            <h3 id="stat-devis">0</h3>
+                            <p>Devis en attente</p>
+                        </div>
+                    </div>
+                    <div class="stat-card clickable" data-page="relances" onclick="navigateToPage('relances')">
+                        <div class="stat-icon">📞</div>
+                        <div class="stat-info">
+                            <h3 id="stat-relances">0</h3>
+                            <p>Relances à venir</p>
+                        </div>
+                    </div>
+                    <div class="stat-card clickable" data-page="devis" onclick="navigateToPage('devis')">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <h3 id="stat-montant">0 €</h3>
+                            <p>Montant total devis</p>
+                        </div>
+                    </div>
+                    <div class="stat-card clickable" data-page="devis" onclick="navigateToPage('devis')">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-info">
+                            <h3 id="stat-commission">0 €</h3>
+                            <p>Commission potentielle</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clients -->
+            <div id="clients-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <input type="text" id="client-search" placeholder="Rechercher un client...">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="client-filter-statut" class="filter-select">
+                                <option value="">Tous les statuts</option>
+                                <option value="prospect">Prospect</option>
+                                <option value="en_cours">En cours</option>
+                                <option value="signe">Signé</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openClientModal()">+ Nouveau client</button>
+                        <button class="btn btn-secondary" onclick="exportClients()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="clients-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="view-col">Voir</th>
+                                <th class="sortable">Nom</th>
+                                <th class="sortable">Téléphone</th>
+                                <th class="sortable">Email</th>
+                                <th class="sortable">Adresse</th>
+                                <th class="sortable">Source</th>
+                                <th class="sortable">Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Projets -->
+            <div id="projets-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <input type="text" id="projet-search" placeholder="Rechercher un projet...">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="projet-filter-statut" class="filter-select">
+                                <option value="">Tous les statuts</option>
+                                <option value="a_etudier">À étudier</option>
+                                <option value="en_cours">En cours</option>
+                                <option value="termine">Terminé</option>
+                            </select>
+                        </div>
+                        <select id="projet-filter-client" style="display: none;">
+                            <option value="">Tous les clients</option>
+                        </select>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openProjetModal()">+ Nouveau projet</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="projets-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="view-col">Voir</th>
+                                <th class="sortable">Titre</th>
+                                <th class="sortable">Client</th>
+                                <th class="sortable">Type travaux</th>
+                                <th class="sortable">Budget</th>
+                                <th class="sortable">Date début</th>
+                                <th class="sortable">Commercial</th>
+                                <th class="sortable">Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Artisans -->
+            <div id="artisans-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <input type="text" id="artisan-search" placeholder="Rechercher un artisan...">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="artisan-filter-metier" class="filter-select">
+                                <option value="">Tous les métiers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openArtisanModal()">+ Nouvel artisan</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="artisans-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="view-col">Voir</th>
+                                <th class="sortable">Société</th>
+                                <th class="sortable">Métier</th>
+                                <th class="sortable">Téléphone</th>
+                                <th class="sortable">Email</th>
+                                <th class="sortable">Zone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Devis -->
+            <div id="devis-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="devis-filter-statut" class="filter-select">
+                                <option value="">Tous les statuts</option>
+                                <option value="envoye">Envoyé</option>
+                                <option value="accepte">Accepté</option>
+                                <option value="refuse">Refusé</option>
+                            </select>
+                        </div>
+                        <select id="devis-filter-projet" style="display: none;">
+                            <option value="">Tous les projets</option>
+                        </select>
+                        <select id="devis-filter-artisan" style="display: none;">
+                            <option value="">Tous les artisans</option>
+                        </select>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openDevisModal()">+ Nouveau devis</button>
+                        <button class="btn btn-secondary" onclick="exportDevis()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="devis-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="view-col">Voir</th>
+                                <th class="sortable">Numéro</th>
+                                <th class="sortable">Projet</th>
+                                <th class="sortable">Client</th>
+                                <th class="sortable">Artisan</th>
+                                <th class="sortable">Montant</th>
+                                <th class="sortable">Commission</th>
+                                <th class="sortable">Commercial</th>
+                                <th class="sortable">Statut</th>
+                                <th class="sortable">Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Commerciaux -->
+            <div id="commerciaux-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <input type="text" id="commercial-search" placeholder="Rechercher un commercial...">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="commercial-filter-role" class="filter-select">
+                                <option value="">Tous les rôles</option>
+                                <option value="admin">Administrateur</option>
+                                <option value="collaborateur">Collaborateur</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="commerciaux-grid">
+                    <!-- Les cartes des commerciaux seront générées dynamiquement -->
+                </div>
+            </div>
+
+            <!-- Relances -->
+            <div id="relances-page" class="content-page">
+                <div class="page-header">
+                    <div class="search-bar">
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="relance-filter-statut" class="filter-select">
+                                <option value="">Tous les statuts</option>
+                                <option value="a_faire">À faire</option>
+                                <option value="fait">Fait</option>
+                            </select>
+                        </div>
+                        <div class="filter-wrapper">
+                            <span class="filter-icon">🔍</span>
+                            <select id="relance-filter-type" class="filter-select">
+                                <option value="">Tous les types</option>
+                                <option value="appel">Appel</option>
+                                <option value="rdv">Rendez-vous</option>
+                                <option value="relance_devis">Relance devis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openRelanceModal()">+ Nouvelle relance</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="relances-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="view-col">Voir</th>
+                                <th class="sortable">Type</th>
+                                <th class="sortable">Titre</th>
+                                <th class="sortable">Client</th>
+                                <th class="sortable">Projet</th>
+                                <th class="sortable">Date programmée</th>
+                                <th class="sortable">Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
+
