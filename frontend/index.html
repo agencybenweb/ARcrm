@@ -20,7 +20,10 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Mot de passe</label>
-                        <input type="password" id="password" name="password" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="password" name="password" required>
+                            <span class="password-toggle" id="password-toggle" onclick="togglePasswordVisibility()">👁️</span>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Se connecter</button>
                 </form>

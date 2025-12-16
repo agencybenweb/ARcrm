@@ -9,6 +9,9 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# Vercel
+.vercel
+
 # Logs
 logs/
 *.log

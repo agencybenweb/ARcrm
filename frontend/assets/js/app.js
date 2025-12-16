@@ -65,6 +65,9 @@ function showApp() {
 function setupEventListeners() {
     // Login
     document.getElementById('login-form').addEventListener('submit', handleLogin);
+    
+    // Fonction pour basculer la visibilité du mot de passe
+    window.togglePasswordVisibility = togglePasswordVisibility;
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
 
     // Navigation
@@ -150,6 +153,24 @@ function setupEventListeners() {
     setTimeout(() => {
         initTableSorting();
     }, 500);
+}
+
+// Basculer la visibilité du mot de passe
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('password-toggle');
+    
+    if (passwordInput && passwordToggle) {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordToggle.textContent = '🙈';
+            passwordToggle.classList.add('active');
+        } else {
+            passwordInput.type = 'password';
+            passwordToggle.textContent = '👁️';
+            passwordToggle.classList.remove('active');
+        }
+    }
 }
 
 // Gestion de la connexion

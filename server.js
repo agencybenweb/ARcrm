@@ -2,7 +2,10 @@
  * Serveur Node.js - Alliance Renov CRM
  */
 
-require('dotenv').config();
+// Charger les variables d'environnement
+// Priorité : .env.local (développement) > .env (production)
+require('dotenv').config({ path: '.env.local' });
+require('dotenv').config(); // .env en fallback
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
