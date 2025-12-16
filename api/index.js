@@ -56,9 +56,7 @@ app.use(session({
 // Note: Vercel route déjà vers /api, donc on utilise directement les routes
 app.use('/', require('../backend/routes'));
 
-// Handler pour Vercel - doit exporter une fonction (req, res)
-module.exports = (req, res) => {
-    // Vercel passe req et res directement, pas besoin de app.listen
-    return app(req, res);
-};
+// Handler pour Vercel
+// Vercel peut appeler soit avec (req, res) soit avec un handler async
+module.exports = app;
 
