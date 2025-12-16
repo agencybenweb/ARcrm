@@ -65,7 +65,22 @@ app.use((req, res, next) => {
 });
 
 // Routes API
-// Vercel route /api/* vers cette fonction, donc on monte les routes à /
+// Vercel route /api/* vers cette fonction
+// Le chemin dans req.url contient /api, donc on doit soit :
+// 1. Monter les routes à /api (mais alors les routes backend doivent avoir /api)
+// 2. Ou utiliser un middleware pour enlever /api du chemin
+
+// Middleware pour enlever /api du chemin si présent
+app.use((req, res, next) => {
+    // Si le chemin commence par /api, l'enlever
+    if (req.url.startsWith('/api')) {
+        req.url = req.url.replace('/api', '') || '/';
+        req.path = req.path.replace('/api', '') || '/';
+    }
+    next();
+});
+
+// Maintenant on peut monter les routes à /
 app.use('/', require('../backend/routes'));
 
 // Handler pour Vercel - Express app directement
