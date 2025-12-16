@@ -52,11 +52,23 @@ app.use(session({
     }
 }));
 
+// Middleware de debug pour Vercel
+app.use((req, res, next) => {
+    console.log('🔍 Vercel Request:', {
+        method: req.method,
+        path: req.path,
+        url: req.url,
+        originalUrl: req.originalUrl,
+        baseUrl: req.baseUrl
+    });
+    next();
+});
+
 // Routes API
-// Note: Vercel route déjà vers /api, donc on utilise directement les routes
+// Vercel route /api/* vers cette fonction, donc on monte les routes à /
 app.use('/', require('../backend/routes'));
 
-// Handler pour Vercel
-// Vercel peut appeler soit avec (req, res) soit avec un handler async
+// Handler pour Vercel - Express app directement
+// Vercel détecte automatiquement l'app Express avec @vercel/node
 module.exports = app;
 
